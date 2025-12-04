@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal Monitor | Industrial Intelligence</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-satellite-dish"></i>
+                <span>SIGNAL<span class="highlight">OS</span></span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Clusters</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-database"></i>
+                    <span>Raw Data</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            
+            <div class="status-indicator">
+                <div class="status-dot pulse"></div>
+                <span>System Online</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="breadcrumbs">
+                    <span>Intelligence</span> / <span class="current">Global Signals</span>
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="avatar">OP</div>
+                </div>
+            </header>
+
+            <!-- HUD Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Avg Impact</h3>
+                        <p id="avg-impact">--</p>
+                    </div>
+                    <div class="stat-chart-mini" id="mini-chart-1"></div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon info">
+                        <i class="fa-solid fa-wave-square"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Avg Sentiment</h3>
+                        <p id="avg-sentiment">--</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon danger">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>High Impact Signals</h3>
+                        <p id="high-impact-count">--</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Sources</h3>
+                        <p id="total-sources">--</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-container glass-panel">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-chart-pie"></i> Topic Distribution</h2>
+                    </div>
+                    <canvas id="topicChart"></canvas>
+                </div>
+                <div class="chart-container glass-panel">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-chart-bar"></i> Impact vs Sentiment</h2>
+                    </div>
+                    <canvas id="scatterChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="data-section glass-panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-list"></i> Live Signal Feed</h2>
+                    <div class="controls">
+                        <input type="text" id="search-input" placeholder="Search signals...">
+                        <button class="btn-icon"><i class="fa-solid fa-filter"></i></button>
+                        <button class="btn-icon"><i class="fa-solid fa-download"></i></button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="signal-table">
+                        <thead>
+                            <tr>
+                                <th>Impact</th>
+                                <th>Source</th>
+                                <th>Title</th>
+                                <th>Sentiment</th>
+                                <th>Topic</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="signal-table-body">
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
