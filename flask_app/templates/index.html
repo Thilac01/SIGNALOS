@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signal Monitor | Industrial Intelligence</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Sidebar -->
@@ -24,26 +28,30 @@
                 <i class="fa-solid fa-satellite-dish"></i>
                 <span>SIGNAL<span class="highlight">OS</span></span>
             </div>
-            
+
             <nav class="nav-menu">
-                <a href="#" class="nav-item active">
+                <a href="#" id="nav-dashboard" class="nav-item active">
                     <i class="fa-solid fa-chart-line"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" id="nav-clusters" class="nav-item">
                     <i class="fa-solid fa-layer-group"></i>
                     <span>Clusters</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" id="nav-raw-data" class="nav-item">
                     <i class="fa-solid fa-database"></i>
                     <span>Raw Data</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" id="nav-accounts" class="nav-item">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Accounts</span>
+                </a>
+                <a href="#" id="nav-settings" class="nav-item">
                     <i class="fa-solid fa-gear"></i>
                     <span>Settings</span>
                 </a>
             </nav>
-            
+
             <div class="status-indicator">
                 <div class="status-dot pulse"></div>
                 <span>System Online</span>
@@ -54,105 +62,267 @@
         <main class="main-content">
             <header class="top-bar">
                 <div class="breadcrumbs">
-                    <span>Intelligence</span> / <span class="current">Global Signals</span>
+                    <span>Intelligence</span> / <span id="current-view-name" class="current">Dashboard</span>
                 </div>
                 <div class="user-profile">
-                    <div class="notifications">
+                    <div class="notifications" id="notification-btn">
                         <i class="fa-regular fa-bell"></i>
                         <span class="badge">3</span>
+                        <div class="notification-dropdown hidden" id="notification-dropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="clear-all">Clear All</button>
+                            </div>
+                            <ul class="notification-list">
+                                <li class="notification-item unread">
+                                    <div class="notif-icon warning"><i class="fa-solid fa-bolt"></i></div>
+                                    <div class="notif-content">
+                                        <p>High impact signal detected</p>
+                                        <span class="time">2 mins ago</span>
+                                    </div>
+                                </li>
+                                <li class="notification-item unread">
+                                    <div class="notif-icon info"><i class="fa-solid fa-layer-group"></i></div>
+                                    <div class="notif-content">
+                                        <p>New cluster formed: "Economic Crisis"</p>
+                                        <span class="time">1 hour ago</span>
+                                    </div>
+                                </li>
+                                <li class="notification-item">
+                                    <div class="notif-icon success"><i class="fa-solid fa-check"></i></div>
+                                    <div class="notif-content">
+                                        <p>System update completed</p>
+                                        <span class="time">5 hours ago</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="avatar">OP</div>
                 </div>
             </header>
 
-            <!-- HUD Stats -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon warning">
-                        <i class="fa-solid fa-bolt"></i>
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dashboard" class="view-section active">
+                <!-- HUD Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Avg Impact</h3>
+                            <p id="avg-impact">--</p>
+                        </div>
+                        <div class="stat-chart-mini" id="mini-chart-1"></div>
                     </div>
-                    <div class="stat-info">
-                        <h3>Avg Impact</h3>
-                        <p id="avg-impact">--</p>
+
+                    <div class="stat-card">
+                        <div class="stat-icon info">
+                            <i class="fa-solid fa-wave-square"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Avg Sentiment</h3>
+                            <p id="avg-sentiment">--</p>
+                        </div>
                     </div>
-                    <div class="stat-chart-mini" id="mini-chart-1"></div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon danger">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>High Impact Signals</h3>
+                            <p id="high-impact-count">--</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Sources</h3>
+                            <p id="total-sources">--</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon info">
-                        <i class="fa-solid fa-wave-square"></i>
+
+                <!-- Charts Section -->
+                <div class="charts-section">
+                    <div class="chart-container glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-chart-pie"></i> Topic Distribution</h2>
+                        </div>
+                        <canvas id="topicChart"></canvas>
                     </div>
-                    <div class="stat-info">
-                        <h3>Avg Sentiment</h3>
-                        <p id="avg-sentiment">--</p>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon danger">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>High Impact Signals</h3>
-                        <p id="high-impact-count">--</p>
+                    <div class="chart-container glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-chart-bar"></i> Impact vs Sentiment</h2>
+                        </div>
+                        <canvas id="scatterChart"></canvas>
                     </div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon success">
-                        <i class="fa-solid fa-globe"></i>
+
+                <!-- Data Table -->
+                <div class="data-section glass-panel">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-list"></i> Live Signal Feed</h2>
+                        <div class="controls">
+                            <input type="text" id="search-input" placeholder="Search signals...">
+                            <button class="btn-icon" id="filter-btn"><i class="fa-solid fa-filter"></i></button>
+                            <button class="btn-icon"><i class="fa-solid fa-download"></i></button>
+                        </div>
                     </div>
-                    <div class="stat-info">
-                        <h3>Total Sources</h3>
-                        <p id="total-sources">--</p>
+                    <div class="table-responsive">
+                        <table class="signal-table">
+                            <thead>
+                                <tr>
+                                    <th>Impact</th>
+                                    <th>Source</th>
+                                    <th>Title</th>
+                                    <th>Sentiment</th>
+                                    <th>Topic</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="signal-table-body">
+                                <!-- Rows injected by JS -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Charts Section -->
-            <div class="charts-section">
-                <div class="chart-container glass-panel">
+            <!-- VIEW: CLUSTERS -->
+            <div id="view-clusters" class="view-section hidden">
+                <div class="glass-panel">
                     <div class="panel-header">
-                        <h2><i class="fa-solid fa-chart-pie"></i> Topic Distribution</h2>
+                        <h2><i class="fa-solid fa-layer-group"></i> Active Clusters</h2>
                     </div>
-                    <canvas id="topicChart"></canvas>
-                </div>
-                <div class="chart-container glass-panel">
-                    <div class="panel-header">
-                        <h2><i class="fa-solid fa-chart-bar"></i> Impact vs Sentiment</h2>
+                    <div id="clusters-grid" class="clusters-grid">
+                        <!-- Clusters injected by JS -->
                     </div>
-                    <canvas id="scatterChart"></canvas>
                 </div>
             </div>
 
-            <!-- Data Table -->
-            <div class="data-section glass-panel">
-                <div class="panel-header">
-                    <h2><i class="fa-solid fa-list"></i> Live Signal Feed</h2>
-                    <div class="controls">
-                        <input type="text" id="search-input" placeholder="Search signals...">
-                        <button class="btn-icon"><i class="fa-solid fa-filter"></i></button>
-                        <button class="btn-icon"><i class="fa-solid fa-download"></i></button>
+            <!-- VIEW: RAW DATA -->
+            <div id="view-raw-data" class="view-section hidden">
+                <div class="glass-panel full-height">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-database"></i> Raw Data Explorer</h2>
+                        <div class="controls">
+                            <button class="btn-primary" id="export-csv"><i class="fa-solid fa-file-csv"></i> Export
+                                CSV</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive full-height-table">
+                        <table class="signal-table" id="raw-data-table">
+                            <thead>
+                                <tr>
+                                    <th>Source</th>
+                                    <th>Title</th>
+                                    <th>Impact</th>
+                                    <th>Sentiment</th>
+                                    <th>Topic</th>
+                                </tr>
+                            </thead>
+                            <tbody id="raw-data-body">
+                                <!-- Rows injected by JS -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="signal-table">
-                        <thead>
-                            <tr>
-                                <th>Impact</th>
-                                <th>Source</th>
-                                <th>Title</th>
-                                <th>Sentiment</th>
-                                <th>Topic</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="signal-table-body">
-                            <!-- Rows injected by JS -->
-                        </tbody>
-                    </table>
+            </div>
+
+            <!-- VIEW: ACCOUNTS -->
+            <div id="view-accounts" class="view-section hidden">
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-users"></i> Connected Accounts</h2>
+                        <button class="btn-primary"><i class="fa-solid fa-plus"></i> Add Account</button>
+                    </div>
+                    <div class="accounts-list">
+                        <div class="account-item">
+                            <div class="account-info">
+                                <i class="fa-brands fa-twitter"></i>
+                                <div>
+                                    <h4>Twitter / X</h4>
+                                    <p>@SignalMonitorBot</p>
+                                </div>
+                            </div>
+                            <div class="account-status active">Connected</div>
+                            <button class="btn-icon"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                        </div>
+                        <div class="account-item">
+                            <div class="account-info">
+                                <i class="fa-solid fa-newspaper"></i>
+                                <div>
+                                    <h4>NewsAPI</h4>
+                                    <p>Global News Feed</p>
+                                </div>
+                            </div>
+                            <div class="account-status active">Connected</div>
+                            <button class="btn-icon"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                        </div>
+                        <div class="account-item">
+                            <div class="account-info">
+                                <i class="fa-brands fa-reddit"></i>
+                                <div>
+                                    <h4>Reddit</h4>
+                                    <p>r/srilanka</p>
+                                </div>
+                            </div>
+                            <div class="account-status inactive">Disconnected</div>
+                            <button class="btn-icon"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- VIEW: SETTINGS -->
+            <div id="view-settings" class="view-section hidden">
+                <div class="settings-grid">
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-display"></i> Appearance</h2>
+                        </div>
+                        <div class="setting-item">
+                            <label>Dark Mode</label>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label>Compact View</label>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-server"></i> System</h2>
+                        </div>
+                        <div class="setting-item">
+                            <label>Data Refresh Rate</label>
+                            <select class="select-input">
+                                <option>Every 1 min</option>
+                                <option>Every 5 mins</option>
+                                <option>Every 15 mins</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>API Key</label>
+                            <input type="password" value="****************" class="input-field" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
@@ -160,4 +330,5 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
+
 </html>
